@@ -1,11 +1,13 @@
 package betagoserie
 
 import (
+	"bytes"
 	"crypto/md5"
 	"encoding/hex"
 	"io/ioutil"
 	"log"
 	"net/http"
+	url_net "net/url"
 )
 
 // TODO : put const into config file ( ENV VARIABLE ? )
@@ -63,13 +65,13 @@ func (bs *BetaClient) getAuthToken(login, password string) {
 		"password": hex.EncodeToString(hasher.Sum(nil)),
 	}
 
-	bs.makeRequest(url, "post", params)
+	bs.makeRequest(url, "POST", params)
 
 }
 
 func (bs *BetaClient) makeRequest(url, urlType string, params map[string]string) {
 
-	println("makeRequest")
+	// var strTEST = "{\"login\":\"Vico1993\",\"password\":\"f97f7d912bff18879ec49f7d093a70f2\",\"client_id\":\"ee7422ce11a2\"}"
 
 	// parameters := url_net.Values{}
 	// if len(params) > 0 {
@@ -81,8 +83,16 @@ func (bs *BetaClient) makeRequest(url, urlType string, params map[string]string)
 	//
 	// parameters.Add("client_id", bs.apiKey)
 
+	// TODO : VERIFIER SI SA MARCHE EN GET ?
+	data := url_net.Values{}
+	data.Set("client_id", bs.apiKey)
+
+	for paramKey, paramValue := range params {
+		data.Add(paramKey, paramValue)
+	}
+
 	// Build the request
-	req, err := http.NewRequest(urlType, url, nil)
+	req, err := http.NewRequest(urlType, url, bytes.NewBufferString(data.Encode()))
 	if err != nil {
 		log.Fatal("NewRequest: ", err)
 	}
