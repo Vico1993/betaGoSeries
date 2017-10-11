@@ -64,8 +64,14 @@ func NewBetaClient(apiKey, login, password string) *BetaClient {
 	return bs
 }
 
-func (*BetaClient) getListEpisode() {
-	// var url = baseUrl + "/episodes/list"
+func (bs *BetaClient) GetListEpisode() {
+	var url = baseUrl + "episodes/list"
+	var params = map[string]string{
+		"token": bs.Token,
+	}
+	result := bs.makeRequest(url, "GET", params)
+
+	println(result)
 }
 
 func (bs *BetaClient) getAuthToken(login, password string, finished chan bool) {
@@ -95,7 +101,7 @@ func (bs *BetaClient) makeRequest(url, urlType string, params map[string]string)
 	// 		parameters.Add(paramKey, paramValue)
 	// 	}
 	// }
-	//
+
 	// parameters.Add("client_id", bs.apiKey)
 
 	// TODO : VERIFIER SI SA MARCHE EN GET ?
@@ -112,6 +118,7 @@ func (bs *BetaClient) makeRequest(url, urlType string, params map[string]string)
 		log.Fatal("NewRequest: ", err)
 	}
 
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	// For control over HTTP client headers,
