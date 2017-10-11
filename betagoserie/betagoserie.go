@@ -4,10 +4,12 @@ import (
 	"bytes"
 	"crypto/md5"
 	"encoding/hex"
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
 	url_net "net/url"
+	"strings"
 )
 
 // TODO : put const into config file ( ENV VARIABLE ? )
@@ -30,18 +32,34 @@ import (
 const baseUrl = "https://api.betaseries.com/"
 
 type BetaClient struct {
-	apiKey string
-	token  string
+	ApiKey string
+	Token  string
+}
+
+// token is a struct return by betaseries
+type tokenStruct struct {
+	User struct {
+		ID        int    `json:"id"`
+		Login     string `json:"login"`
+		Xp        int    `json:"xp"`
+		InAccount bool   `json:"in_account"`
+	} `json:"user"`
+	Token  string        `json:"token"`
+	Hash   string        `json:"hash"`
+	Errors []interface{} `json:"errors"`
 }
 
 func NewBetaClient(apiKey, login, password string) *BetaClient {
 
+	finished := make(chan bool)
+
 	var bs = &BetaClient{
-		apiKey: apiKey,
-		token:  " ",
+		ApiKey: apiKey,
+		Token:  " ",
 	}
 
-	bs.getAuthToken(login, password)
+	go bs.getAuthToken(login, password, finished)
+	<-finished
 
 	return bs
 }
@@ -50,12 +68,7 @@ func (*BetaClient) getListEpisode() {
 	// var url = baseUrl + "/episodes/list"
 }
 
-func (bs *BetaClient) getAuthToken(login, password string) {
-	println("AuthToken")
-	// if bs.token != "" {
-	// 	return bs.token
-	// }
-
+func (bs *BetaClient) getAuthToken(login, password string, finished chan bool) {
 	hasher := md5.New()
 	hasher.Write([]byte(password))
 
@@ -65,13 +78,15 @@ func (bs *BetaClient) getAuthToken(login, password string) {
 		"password": hex.EncodeToString(hasher.Sum(nil)),
 	}
 
-	bs.makeRequest(url, "POST", params)
-
+	var token tokenStruct
+	result := bs.makeRequest(url, "POST", params)
+	json.NewDecoder(strings.NewReader(result)).Decode(&token)
+	bs.Token = token.Token
+	finished <- true
 }
 
-func (bs *BetaClient) makeRequest(url, urlType string, params map[string]string) {
-
-	// var strTEST = "{\"login\":\"Vico1993\",\"password\":\"f97f7d912bff18879ec49f7d093a70f2\",\"client_id\":\"ee7422ce11a2\"}"
+// Make the request and return the JSON Data
+func (bs *BetaClient) makeRequest(url, urlType string, params map[string]string) string {
 
 	// parameters := url_net.Values{}
 	// if len(params) > 0 {
@@ -85,7 +100,7 @@ func (bs *BetaClient) makeRequest(url, urlType string, params map[string]string)
 
 	// TODO : VERIFIER SI SA MARCHE EN GET ?
 	data := url_net.Values{}
-	data.Set("client_id", bs.apiKey)
+	data.Set("client_id", bs.ApiKey)
 
 	for paramKey, paramValue := range params {
 		data.Add(paramKey, paramValue)
@@ -123,5 +138,6 @@ func (bs *BetaClient) makeRequest(url, urlType string, params map[string]string)
 		log.Fatal("erreur ReadAll: ", err)
 	}
 
-	println(string(body))
+	return string(body)
+
 }
