@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	url_net "net/url"
+	"strconv"
 	"strings"
 )
 
@@ -97,17 +98,18 @@ type errorStruct struct {
 }
 
 // episode is a struct return by betaseries
-type episodeListStruct struct {
-	Show  []showsStruct `json:"shows"`
-	Error []errorStruct `json:"error"`
-}
+// type episodeListStruct struct {
+// 	Show  []showsStruct `json:"shows"`
+// 	Error []errorStruct `json:"error"`
+// }
 
+// NewBetaClient create or new client to interact with Betaseries api
 func NewBetaClient(apiKey, login, password string) *BetaClient {
 
 	finished := make(chan bool)
 
 	var bs = &BetaClient{
-		ApiKey: apiKey,
+		APIKey: apiKey,
 		Token:  " ",
 	}
 
@@ -121,7 +123,7 @@ func (bs *BetaClient) getAuthToken(login, password string, finished chan bool) {
 	hasher := md5.New()
 	hasher.Write([]byte(password))
 
-	var url = baseUrl + "members/auth"
+	var url = baseURL + "members/auth"
 	var params = map[string]string{
 		"login":    login,
 		"password": hex.EncodeToString(hasher.Sum(nil)),
@@ -138,7 +140,7 @@ func (bs *BetaClient) getAuthToken(login, password string, finished chan bool) {
 func (bs *BetaClient) makeRequest(url, urlType string, params map[string]string) string {
 
 	data := url_net.Values{}
-	data.Set("client_id", bs.ApiKey)
+	data.Set("client_id", bs.APIKey)
 
 	for paramKey, paramValue := range params {
 		data.Add(paramKey, paramValue)
@@ -189,9 +191,30 @@ func (bs *BetaClient) makeRequest(url, urlType string, params map[string]string)
 
 // GetListEpisode return unWatched Episodes of all Show
 func (bs *BetaClient) GetListEpisode() string {
-	var url = baseUrl + "episodes/list"
+	var url = baseURL + "episodes/list"
 	var params = map[string]string{
 		"token": bs.Token,
+	}
+	result := bs.makeRequest(url, "GET", params)
+	return result
+}
+
+// GetLastEpisodeForShow return last Episodes of show(s)
+func (bs *BetaClient) GetLastEpisodeForShow(listOfShowsID []string, typeOfShowID string, displaySpecial bool) string {
+
+	// Type of IDS
+	var showID string
+	if typeOfShowID == "TheTVDB" {
+		showID = "showTheTVDBId"
+	} else {
+		showID = "id"
+	}
+
+	var url = baseURL + "episodes/latest"
+	var params = map[string]string{
+		"token":    bs.Token,
+		showID:     strings.Join(listOfShowsID, ","),
+		"specials": strconv.FormatBool(displaySpecial),
 	}
 	result := bs.makeRequest(url, "GET", params)
 	return result
