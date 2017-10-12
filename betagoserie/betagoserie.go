@@ -190,7 +190,7 @@ func (bs *BetaClient) makeRequest(url, urlType string, params map[string]string)
 // ***************************************************
 
 // GetListEpisode return unWatched Episodes of all Show
-func (bs *BetaClient) GetListEpisode() string {
+func (bs *BetaClient) GetListEpisode(listOfShowsID []string, typeOfShowID string, displaySpecial bool) string {
 	var url = baseURL + "episodes/list"
 	var params = map[string]string{
 		"token": bs.Token,
