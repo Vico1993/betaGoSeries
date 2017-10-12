@@ -49,6 +49,58 @@ type tokenStruct struct {
 	Errors []interface{} `json:"errors"`
 }
 
+type episodeStruct struct {
+	ID        int    `json:"id"`
+	TvdbID    int    `json:"thetvdb_id"`
+	YoutubeID int    `json:"youtube_id"`
+	Title     string `json:"title"`
+	Season    string `json:"season"`
+	Episode   int    `json:"episode"`
+	Show      struct {
+		ID               int    `json:"id"`
+		TvdbID           int    `json:"thetvdb_id"`
+		Title            string `json:"title"`
+		InAccount        bool   `json:"in_account"`
+		Remaining        int    `json:"remaining"`
+		MinutesRemaining int    `json:"minutes_remaining"`
+		Progress         int    `json:"progress"`
+	} `json:"show"`
+	Code        string `json:"code"`
+	Global      int    `json:"global"`
+	Special     int    `json:"special"`
+	Description string `json:"description"`
+	Date        string `json:"date"`
+	Note        struct {
+		Total int     `json:"total"`
+		Mean  float32 `json:"mean"`
+		User  int     `json:"user"`
+	} `json:"note"`
+	User struct {
+		Seen       bool `json:"seen"`
+		Downloaded bool `json:"downloaded"`
+	} `json:"user"`
+	Comments   string `json:"comments"`
+	ResoureURL string `json:"resource_url"`
+}
+
+type showsStruct struct {
+	ID            int             `json:"id"`
+	TvdbID        int             `json:"thetvdb_id"`
+	ImdbID        string          `json:"imdb_id"`
+	Title         string          `json:"title"`
+	Remaining     int             `json:"remaining"`
+	EpisodeUnseen []episodeStruct `json:"unseen"`
+}
+
+type errorStruct struct {
+}
+
+// episode is a struct return by betaseries
+type episodeListStruct struct {
+	Show  []showsStruct `json:"shows"`
+	Error []errorStruct `json:"error"`
+}
+
 func NewBetaClient(apiKey, login, password string) *BetaClient {
 
 	finished := make(chan bool)
@@ -64,14 +116,15 @@ func NewBetaClient(apiKey, login, password string) *BetaClient {
 	return bs
 }
 
-func (bs *BetaClient) GetListEpisode() {
+func (bs *BetaClient) GetListEpisode() string {
 	var url = baseUrl + "episodes/list"
 	var params = map[string]string{
 		"token": bs.Token,
 	}
 	result := bs.makeRequest(url, "GET", params)
-
-	println(result)
+	// var list episodeListStruct
+	// json.NewDecoder(strings.NewReader(result)).Decode(&list)
+	return result
 }
 
 func (bs *BetaClient) getAuthToken(login, password string, finished chan bool) {
@@ -94,17 +147,6 @@ func (bs *BetaClient) getAuthToken(login, password string, finished chan bool) {
 // Make the request and return the JSON Data
 func (bs *BetaClient) makeRequest(url, urlType string, params map[string]string) string {
 
-	// parameters := url_net.Values{}
-	// if len(params) > 0 {
-	// 	println(params)
-	// 	for paramKey, paramValue := range params {
-	// 		parameters.Add(paramKey, paramValue)
-	// 	}
-	// }
-
-	// parameters.Add("client_id", bs.apiKey)
-
-	// TODO : VERIFIER SI SA MARCHE EN GET ?
 	data := url_net.Values{}
 	data.Set("client_id", bs.ApiKey)
 
