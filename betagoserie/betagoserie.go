@@ -226,7 +226,7 @@ func (bs *BetaClient) GetListEpisode(listOfShowsID []string, typeOfShowID string
 // Important parameter, other parameter are on the [string]string other ( Check Documentation to learn more about it )
 func (bs *BetaClient) GetLastEpisodeForShow(listOfShowsID []string, typeOfShowID string, displaySpecial bool) string {
 
-	// Type of IDS
+	// Definition type of show id, to rename request parameter
 	var showID string
 	if typeOfShowID == "TheTVDB" {
 		showID = "showTheTVDBId"
@@ -235,6 +235,7 @@ func (bs *BetaClient) GetLastEpisodeForShow(listOfShowsID []string, typeOfShowID
 	}
 
 	var url = baseURL + "episodes/latest"
+	// Definition request parameter
 	var params = map[string]string{
 		"token":    bs.Token,
 		showID:     strings.Join(listOfShowsID, ","),
