@@ -106,6 +106,7 @@ type errorStruct struct {
 // NewBetaClient create or new client to interact with Betaseries api
 func NewBetaClient(apiKey, login, password string) *BetaClient {
 
+	// Force Go Routine to set token.
 	finished := make(chan bool)
 
 	var bs = &BetaClient{
