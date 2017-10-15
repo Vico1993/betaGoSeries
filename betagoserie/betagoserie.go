@@ -191,16 +191,39 @@ func (bs *BetaClient) makeRequest(url, urlType string, params map[string]string)
 // ***************************************************
 
 // GetListEpisode return unWatched Episodes of all Show
-func (bs *BetaClient) GetListEpisode(listOfShowsID []string, typeOfShowID string, displaySpecial bool) string {
+// Important parameter, other parameter are on the [string]string other ( Check Documentation to learn more about it )
+func (bs *BetaClient) GetListEpisode(listOfShowsID []string, typeOfShowID string, other map[string]string) string {
+
+	// Definition type of show id, to rename request parameter
+	var showID string
+	if typeOfShowID == "TheTVDB" {
+		showID = "showTheTVDBId"
+	} else if typeOfShowID == "IMDB" {
+		showID = "showIMDBId"
+	} else {
+		showID = "showId"
+	}
+
 	var url = baseURL + "episodes/list"
+	// Setting request parameter
 	var params = map[string]string{
 		"token": bs.Token,
+		showID:  strings.Join(listOfShowsID, ","),
 	}
+
+	// If other parameter set by user, adding them to params value.
+	if len(other) > 0 {
+		for keyOther, valueOther := range other {
+			params[keyOther] = valueOther
+		}
+	}
+
 	result := bs.makeRequest(url, "GET", params)
 	return result
 }
 
 // GetLastEpisodeForShow return last Episodes of show(s)
+// Important parameter, other parameter are on the [string]string other ( Check Documentation to learn more about it )
 func (bs *BetaClient) GetLastEpisodeForShow(listOfShowsID []string, typeOfShowID string, displaySpecial bool) string {
 
 	// Type of IDS
