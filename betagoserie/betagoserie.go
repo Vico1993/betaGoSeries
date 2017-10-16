@@ -222,6 +222,20 @@ func (bs *BetaClient) UnWatched(listOfShowsID []string, typeOfEpisodeID string) 
 	return result
 }
 
+// SearchEpisode return betaseries episode by is ID or NumberOfTheShow ( SxxExx )
+func (bs *BetaClient) SearchEpisode(showID string, numberOfTheShow string, subtitles bool) string {
+	var url = baseURL + "episodes/search"
+
+	var params = map[string]string{
+		"token":     bs.Token,
+		"show_id":   showID,
+		"number":    numberOfTheShow,
+		"subtitles": strconv.FormatBool(subtitles),
+	}
+	result := bs.makeRequest(url, "GET", params)
+	return result
+}
+
 // ***************************************************
 //
 //					COMMENT PART
