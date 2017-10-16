@@ -13,12 +13,6 @@ import (
 	"strings"
 )
 
-// TODO : put const into config file ( ENV VARIABLE ? )
-// const apiKey = "ee7422ce11a2"
-// const apiSecret = "d2e555a996fb64e49febb5adb9d1c818"
-// const login = "d2e555a996fb64e49febb5adb9d1c818"
-// const password = "d2e555a996fb64e49febb5adb9d1c818"
-
 // TODO : handle
 //  - Episode Search
 
