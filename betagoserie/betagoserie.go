@@ -271,6 +271,26 @@ func (bs *BetaClient) WatchedEpisode(listOfShowsID []string, typeOfEpisodeID str
 	}
 	result := bs.makeRequest(url, "POST", params)
 	return result
+
+}
+
+// UnWatched Episode update betaserie's episode to passe hime to unwatched episode.
+func (bs *BetaClient) UnWatched(listOfShowsID []string, typeOfEpisodeID string) string {
+	// Definition type of show id, to rename request parameter
+	var showID string
+	if typeOfEpisodeID == "TheTVDB" {
+		showID = "showTheTVDBId"
+	} else {
+		showID = "id"
+	}
+
+	var url = baseURL + "episodes/watched"
+	var params = map[string]string{
+		"token": bs.Token,
+		showID:  strings.Join(listOfShowsID, ","),
+	}
+	result := bs.makeRequest(url, "DELETE", params)
+	return result
 }
 
 // ***************************************************
