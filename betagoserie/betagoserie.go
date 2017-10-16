@@ -191,17 +191,9 @@ func (bs *BetaClient) makeRequest(url, urlType string, params map[string]string)
 // Important parameter, other parameter are on the [string]string other ( Check Documentation to learn more about it )
 func (bs *BetaClient) GetListEpisode(listOfShowsID []string, typeOfShowID string, other map[string]string) string {
 
-	// Definition type of show id, to rename request parameter
-	var showID string
-	if typeOfShowID == "TheTVDB" {
-		showID = "showTheTVDBId"
-	} else if typeOfShowID == "IMDB" {
-		showID = "showIMDBId"
-	} else {
-		showID = "showId"
-	}
-
 	var url = baseURL + "episodes/list"
+	var showID = getParameterOfShowType(typeOfShowID)
+
 	// Setting request parameter
 	var params = map[string]string{
 		"token": bs.Token,
@@ -223,15 +215,9 @@ func (bs *BetaClient) GetListEpisode(listOfShowsID []string, typeOfShowID string
 // Important parameter, other parameter are on the [string]string other ( Check Documentation to learn more about it )
 func (bs *BetaClient) GetLastEpisodeForShow(listOfShowsID []string, typeOfShowID string, displaySpecial bool) string {
 
-	// Definition type of show id, to rename request parameter
-	var showID string
-	if typeOfShowID == "TheTVDB" {
-		showID = "showTheTVDBId"
-	} else {
-		showID = "id"
-	}
-
 	var url = baseURL + "episodes/latest"
+	var showID = getParameterOfShowType(typeOfShowID)
+
 	// Definition request parameter
 	var params = map[string]string{
 		"token":    bs.Token,
@@ -244,14 +230,6 @@ func (bs *BetaClient) GetLastEpisodeForShow(listOfShowsID []string, typeOfShowID
 
 // WatchedEpisode update betaserie's episode to passe hime to watched episode.
 func (bs *BetaClient) WatchedEpisode(listOfShowsID []string, typeOfEpisodeID string, bulk bool, delete bool, note int) string {
-	// Definition type of show id, to rename request parameter
-	var showID string
-	if typeOfEpisodeID == "TheTVDB" {
-		showID = "showTheTVDBId"
-	} else {
-		showID = "id"
-	}
-
 	// note need to be between 1 and 5
 	if note < 0 {
 		note = 1
@@ -260,6 +238,8 @@ func (bs *BetaClient) WatchedEpisode(listOfShowsID []string, typeOfEpisodeID str
 	}
 
 	var url = baseURL + "episodes/watched"
+	var showID = getParameterOfShowType(typeOfEpisodeID)
+
 	// Set Request parameter like Api want...
 	// Need to converte all parameter to String
 	var params = map[string]string{
@@ -276,15 +256,10 @@ func (bs *BetaClient) WatchedEpisode(listOfShowsID []string, typeOfEpisodeID str
 
 // UnWatched Episode update betaserie's episode to passe hime to unwatched episode.
 func (bs *BetaClient) UnWatched(listOfShowsID []string, typeOfEpisodeID string) string {
-	// Definition type of show id, to rename request parameter
-	var showID string
-	if typeOfEpisodeID == "TheTVDB" {
-		showID = "showTheTVDBId"
-	} else {
-		showID = "id"
-	}
 
 	var url = baseURL + "episodes/watched"
+	var showID = getParameterOfShowType(typeOfEpisodeID)
+
 	var params = map[string]string{
 		"token": bs.Token,
 		showID:  strings.Join(listOfShowsID, ","),
@@ -298,3 +273,23 @@ func (bs *BetaClient) UnWatched(listOfShowsID []string, typeOfEpisodeID string) 
 //					COMMENT PART
 //
 // ***************************************************
+
+// ***************************************************
+//
+//					Tool Client's Needed
+//
+// ***************************************************
+
+func getParameterOfShowType(typeOfShowID string) string {
+	// Definition type of show id, to rename request parameter
+	var showID string
+	if typeOfShowID == "TheTVDB" {
+		showID = "showTheTVDBId"
+	} else if typeOfShowID == "IMDB" {
+		showID = "showIMDBId"
+	} else {
+		showID = "showId"
+	}
+
+	return showID
+}
