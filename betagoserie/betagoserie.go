@@ -22,11 +22,8 @@ import (
 // TODO : handle
 //  - Episode Watched
 //  - Episode UnWatched
-//  - Episode List
-//  - Episode Show
-//  - Show Display
-//  - Show Episodes
-//  - Show List
+//  - Episode Scrapper
+//  - Episode Search
 
 // TODO : AddComment
 
@@ -242,6 +239,37 @@ func (bs *BetaClient) GetLastEpisodeForShow(listOfShowsID []string, typeOfShowID
 		"specials": strconv.FormatBool(displaySpecial),
 	}
 	result := bs.makeRequest(url, "GET", params)
+	return result
+}
+
+// WatchedEpisode update betaserie's episode to passe hime to watched episode.
+func (bs *BetaClient) WatchedEpisode(listOfShowsID []string, typeOfEpisodeID string, bulk bool, delete bool, note int) string {
+	// Definition type of show id, to rename request parameter
+	var showID string
+	if typeOfEpisodeID == "TheTVDB" {
+		showID = "showTheTVDBId"
+	} else {
+		showID = "id"
+	}
+
+	// note need to be between 1 and 5
+	if note < 0 {
+		note = 1
+	} else if note > 5 {
+		note = 5
+	}
+
+	var url = baseURL + "episodes/watched"
+	// Set Request parameter like Api want...
+	// Need to converte all parameter to String
+	var params = map[string]string{
+		"token":  bs.Token,
+		showID:   strings.Join(listOfShowsID, ","),
+		"bulk":   strconv.FormatBool(bulk),
+		"delete": strconv.FormatBool(delete),
+		"note":   strconv.FormatInt(int64(note), 10),
+	}
+	result := bs.makeRequest(url, "POST", params)
 	return result
 }
 
