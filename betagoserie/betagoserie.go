@@ -14,9 +14,9 @@ import (
 )
 
 // TODO : handle
-//  - Episode Search
-
-// TODO : AddComment
+// - Comment
+// - Planning ?
+// - POLLS ?
 
 const baseURL = "https://api.betaseries.com/"
 
