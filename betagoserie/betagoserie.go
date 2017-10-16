@@ -20,9 +20,6 @@ import (
 // const password = "d2e555a996fb64e49febb5adb9d1c818"
 
 // TODO : handle
-//  - Episode Watched
-//  - Episode UnWatched
-//  - Episode Scrapper
 //  - Episode Search
 
 // TODO : AddComment
@@ -48,57 +45,8 @@ type tokenStruct struct {
 	Errors []interface{} `json:"errors"`
 }
 
-// type episodeStruct struct {
-// 	ID        int    `json:"id"`
-// 	TvdbID    int    `json:"thetvdb_id"`
-// 	YoutubeID int    `json:"youtube_id"`
-// 	Title     string `json:"title"`
-// 	Season    string `json:"season"`
-// 	Episode   int    `json:"episode"`
-// 	Show      struct {
-// 		ID               int    `json:"id"`
-// 		TvdbID           int    `json:"thetvdb_id"`
-// 		Title            string `json:"title"`
-// 		InAccount        bool   `json:"in_account"`
-// 		Remaining        int    `json:"remaining"`
-// 		MinutesRemaining int    `json:"minutes_remaining"`
-// 		Progress         int    `json:"progress"`
-// 	} `json:"show"`
-// 	Code        string `json:"code"`
-// 	Global      int    `json:"global"`
-// 	Special     int    `json:"special"`
-// 	Description string `json:"description"`
-// 	Date        string `json:"date"`
-// 	Note        struct {
-// 		Total int     `json:"total"`
-// 		Mean  float32 `json:"mean"`
-// 		User  int     `json:"user"`
-// 	} `json:"note"`
-// 	User struct {
-// 		Seen       bool `json:"seen"`
-// 		Downloaded bool `json:"downloaded"`
-// 	} `json:"user"`
-// 	Comments   string `json:"comments"`
-// 	ResoureURL string `json:"resource_url"`
-// }
-
-// type showsStruct struct {
-// 	ID            int             `json:"id"`
-// 	TvdbID        int             `json:"thetvdb_id"`
-// 	ImdbID        string          `json:"imdb_id"`
-// 	Title         string          `json:"title"`
-// 	Remaining     int             `json:"remaining"`
-// 	EpisodeUnseen []episodeStruct `json:"unseen"`
-// }
-
 type errorStruct struct {
 }
-
-// episode is a struct return by betaseries
-// type episodeListStruct struct {
-// 	Show  []showsStruct `json:"shows"`
-// 	Error []errorStruct `json:"error"`
-// }
 
 // NewBetaClient create or new client to interact with Betaseries api
 func NewBetaClient(apiKey, login, password string) *BetaClient {
