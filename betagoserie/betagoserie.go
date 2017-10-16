@@ -268,6 +268,18 @@ func (bs *BetaClient) UnWatched(listOfShowsID []string, typeOfEpisodeID string) 
 	return result
 }
 
+// GetEpisodeByFileName return betaseries episode by is file name
+func (bs *BetaClient) GetEpisodeByFileName(filename string) string {
+	var url = baseURL + "episodes/scrapper"
+
+	var params = map[string]string{
+		"token": bs.Token,
+		"file":  filename,
+	}
+	result := bs.makeRequest(url, "GET", params)
+	return result
+}
+
 // ***************************************************
 //
 //					COMMENT PART
