@@ -228,6 +228,18 @@ func (bs *BetaClient) GetLastEpisodeForShow(listOfShowsID []string, typeOfShowID
 	return result
 }
 
+// GetEpisodeByFileName return betaseries episode by is file name
+func (bs *BetaClient) GetEpisodeByFileName(filename string) string {
+	var url = baseURL + "episodes/scrapper"
+
+	var params = map[string]string{
+		"token": bs.Token,
+		"file":  filename,
+	}
+	result := bs.makeRequest(url, "GET", params)
+	return result
+}
+
 // WatchedEpisode update betaserie's episode to passe hime to watched episode.
 func (bs *BetaClient) WatchedEpisode(listOfShowsID []string, typeOfEpisodeID string, bulk bool, delete bool, note int) string {
 	// note need to be between 1 and 5
@@ -265,18 +277,6 @@ func (bs *BetaClient) UnWatched(listOfShowsID []string, typeOfEpisodeID string) 
 		showID:  strings.Join(listOfShowsID, ","),
 	}
 	result := bs.makeRequest(url, "DELETE", params)
-	return result
-}
-
-// GetEpisodeByFileName return betaseries episode by is file name
-func (bs *BetaClient) GetEpisodeByFileName(filename string) string {
-	var url = baseURL + "episodes/scrapper"
-
-	var params = map[string]string{
-		"token": bs.Token,
-		"file":  filename,
-	}
-	result := bs.makeRequest(url, "GET", params)
 	return result
 }
 
