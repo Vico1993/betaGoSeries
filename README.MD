@@ -31,5 +31,5 @@ If you find any bug, please open a Issue or send me an Pull Request
 <a name="todo"></a>
 ## Todo
 This item will be hade soon.. : 
-    1. Write Getting Started !! ;) 
-    2. Documentation.. 
+1. [Write Getting Started] 
+2. [Documentation] 
