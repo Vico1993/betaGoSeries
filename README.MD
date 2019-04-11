@@ -14,6 +14,7 @@ BetaGoSeries it's Client Go Library to communicate with Beatseries API ( https:/
 ## Requirements:
 You need to have GO correctly install on your machine. 
 That's It :) 
+*( very old code.. don't judge me )*
 
 <a name="install"></a>
 ## Install

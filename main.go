@@ -6,7 +6,7 @@ import (
 
 func main() {
 	// Connection
-	var client = betagoserie.NewBetaClient("ee7422ce11a2", "Vico1993", "victor1993")
+	var client = betagoserie.NewBetaClient( #apiKey#, #login#, #password# )
 
 	// test := client.GetListEpisode()
 
